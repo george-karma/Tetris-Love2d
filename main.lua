@@ -1,135 +1,107 @@
-
 io.stdout:setvbuf("no")
 Class = require 'Libraries/classic-master/classic'
-Input = require 'Libraries/boipushy-master/input'
-Timer = require 'Libraries/chrono-master/Timer'
-Physics = require "Libraries/windfield"
-Camera = require "Libraries/STALKER-X-master/Camera"
-audio = require "Libraries/wave-master/wave"
 
-function love.load()
---Getting all objects and libraries
-	timer = Timer()
-	input = Input()
-	camera = Camera()
+function  love.load()
+  love.window.setMode(540, 966)
+
+  grid_x_start = 1--decides where the grid stats on the x axis
+  grid_y_start = 200--decides where the grid starts on the y axis
+  grid_x_size = 10-- number of cells from start
+  grid_y_size = 18-- number of cells from start
+  block_distance = 40 -- scalar for the whole grid, distance between cells
+  block_size = 20 -- size of individual cells
+  inert_grid_array ={} -- the matrix that stores pieces not moving, an array of arrays
+  define_inert()
+  colours_array = { --array for diffrent coloured blocks
+    g ={0,255,0},
+    e = {0,0,0},
+    i = {47,76,94},
+    j = {93,91,42},
+    l = {49,85,76},
+    o = {92,69,47},
+    s = {83,54,93},
+    t = {97,58,77},
+    z = {66,83,46}
+  }
+  pieces_array = {
+    {
+      {"e","i","e"},
+      {"e","i","e"},
+      {"e","i","e"},
+    }
+  }
 
 
-	objectFiles = {}
-	getFileList("Objects", objectFiles)
-	requireFiles(objectFiles)
---Getting all objects and libraries
-	
-	
-	input:bind("a", "A")
-
-	gridX = 10
-	gridY = 18
-	inertBlockArray = {}
-
-	for y = 1, gridY do 	--for every row
-		inertBlockArray[y] = {}
-		for x = 1, gridX do --for every colum
-			inertBlockArray[y][x] = " " -- make the blocks inert before using the array, i.e. fill them with " "
-		end
-	end
-
-	love.window.setMode(400,800)
-	mainCanvas = love.graphics.newCanvas(200,380)
-	mainCanvas:setFilter("nearest","nearest")
-	love.graphics.setLineStyle("rough")
-	--bgc to white
-	love.graphics.setBackgroundColor(255, 255, 255)
 
 end
-
-
 
 function love.update(dt)
-	
 
-
-
-
+end
+--detecs keypresses
+function  love.keypressed(key)
+  if key == "x" then
+    rotate_piece(current_piece)
+  end
 end
 
 
-
-function love.draw(dt)
-	love.graphics.setCanvas(mainCanvas)
-	love.graphics.clear()
-		for y = 1, gridY do --y of row for 18 rows
-			for x = 1, gridX do --x of block for 10 block per row
-				local colours = {
-                [' '] = {.87, .87, .87},
-                i = {.47, .76, .94},
-                j = {.93, .91, .42},
-                l = {.49, .85, .76},
-                o = {.92, .69, .47},
-                s = {.83, .54, .93},
-                t = {.97, .58, .77},
-                z = {.66, .83, .46},
-           		}
-           		local block = inertBlockArray [y][x]
-           		local colour = colours [block]
-				love.graphics.setColor(colour)
-				local blockSize = 20
-				local blockDrawSize = blockSize-1
-				love.graphics.rectangle("fill", (x-1)*blockSize, (y-1)*blockSize, blockDrawSize, blockDrawSize)
-			end
-		end 
-	love.graphics.setCanvas()
-
-	love.graphics.draw(mainCanvas,0,0,0,2,2)
+function  love.draw()
+  draw_grid()
 end
- 
 
 
-
-
-
--- *******FUNCTIONS CALLED ON LOAD********
-function getFileList (folder, filePathList)
-	local files = love.filesystem.getDirectoryItems(folder)
-
-	--here i is the key and item is the actual item
-	--we iterate the directory items and add them to the filePathList
-	for i, file in ipairs(files) do
-		local filePath = folder .."/".. file
-		if  love.filesystem.isFile(filePath) then
-			--insert the file path into the path list
-			table.insert(filePathList,filePath)
-				elseif love.filesystem.isDirectory(filePath) then
-				getFileList(filePath, filePathList)	
-		end
-	end
+--draw the grid by creating circes at every x y pos
+--color the each block in the grid according to what it needs to be
+function draw_grid(size_x,size_y)
+  --for every x and y position do the following
+  for x = size_x , grid_x_size do
+    for y = size_y, grid_y_size do
+      --reset the colour and draw the grid outline
+      love.graphics.setColor(255, 255,255)
+      draw_block("g",x,y,"line")
+      -- to figure out what color we should paint the current block, we look whats in the inert array at the current coordiantes and paint it that
+      draw_block(inert_grid_array[x][y],x,y,"fill")
+    end
+  end
+  for x = 1,3 do
+    for y = 1, 3 do
+      current_piece = pieces_array[1][y][x]
+      if current_piece ~= "e" then
+        draw_block(current_piece,x,y,"fill")
+      end
+    end
+  end
 end
---[[
-	This function iterates through the objects we got from GetObjectList
-	and makes it so the project requieres them, thus saving time and automatically adding all 
-	required objects.
-	Also worh mentionsing is that all requiered objects are defined as local in the other file
-	 (i.e. circle.lua), but global in the current construct.
---]]
-function requireFiles(files)
-	for i,file in ipairs(files) do
-		local path,fileName,extension = SplitFilename(file)
-		local file = file:sub(1,-5)	
-		fileName = fileName:sub(1,-5)	
-		--local typeName = file:sub(9)
-		--#parts is the size of parts for lists
-		--_G is all global variables defined in the scope
-		_G[fileName] = require(file)	
-	end
+
+--draw individual blocks based on their letter in the inert array
+function draw_block(block,x,y,mode)
+  --the local array block stores a letter that coresponds to a pre defined letter in the colour array defined on load
+  --here we got a letter stored in the block variable, so we can look for the colour in the colours array and store the color in a local array
+  local colour = colours_array[block]
+  love.graphics.setColor(colour)
+  love.graphics.circle(mode, x*block_distance + grid_x_start, y*block_distance+grid_y_start, block_size, block_size)
 end
-function SplitFilename(strFilename)
-	-- Returns the Path, Filename, and Extension as 3 values
-	-- Uses some pattern recognition magic i should probably look into to do it
-	return string.match(strFilename, "(.-)([^\\/]-%.?([^%.\\/]*))$")
+
+--define the grid array variable, every block is set to "e", for empty
+function define_inert()
+  for x = 1, grid_x_size do --create as manny matrixes inside the array as the number of cells we have on the y axis
+    inert_grid_array[x] = {} -- create a new matrix inside the matrix
+    for y =1, grid_y_size do --add items to the sub-array
+      inert_grid_array[x][y] = "e"
+    end
+  end
 end
--- *******FUNCTIONS CALLED ON LOAD********
 
-
-
-function lerp (a,b,t)
-	return a+(b-a)*t
+function rotate_piece(table)
+  local rotated_table = {}
+  for i = 1,#table[1] do
+    rotated_table[i] = {}
+    local cell_no = 0
+    for j=#table, 1,-1 do
+      cell_no = cell_no+1
+      rotated_table[i][cell_no] = tb[j][i]
+    end
+  end
+  return rotated_table
 end
