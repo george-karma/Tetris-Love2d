@@ -2,7 +2,7 @@
 --it in Main.lua using nearest neibhour so we get the pixelated effect
 function love.conf(t)
 	t.identity = nil
-	t.version = "0.10.2"
+	t.version = "11.2"
 	t.console = true
 
 	t.window.title = "MATLUV"
