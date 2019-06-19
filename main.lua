@@ -1,5 +1,6 @@
 io.stdout:setvbuf("no")
 print("Debugger active")
+require "globals"
 Class = require 'libs/classic-master/classic'
 Input = require 'libs/boipushy-master/input'
 Timer = require 'libs/chrono-master/Timer'

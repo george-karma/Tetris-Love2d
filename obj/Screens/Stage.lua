@@ -10,10 +10,10 @@ function Stage:new(opts)
 	grid_x_start = 1--decides where the grid stats on the x axis
 	grid_y_start = 200--decides where the grid starts on the y axis
 
-	self.grid = self.interface:addGameObject("Grid",grid_x_start,grid_y_start,{screen = self})
+	self.grid = self.interface:addGameObject("Grid",grid_x_start,grid_y_start)
 	self.pieces_array = {"Tall"}
 	self.current_piece = nil
-	self.current_piece = self.interface:addGameObject("Piece",3,3,{screenObject = self})
+	self.current_piece = self.interface:addGameObject("Tall",3,3)
 end
 
 function Stage:update(dt)
