@@ -11,25 +11,22 @@ function Piece:new(interface,x,y,opts)
 	self.dead = false
 	self.creationTime = love.timer.getTime()
 	piece_size = 4 --how big a piece is on the x/y axis/ how manny elements there are in each sub-subarray
-	if self.shape then
-		input:bind("x", function() current_piece.shape= rotate_piece(current_piece.shape) end)
+	input:bind("x", function() self.shape= rotate_piece(self.shape) end)
 
-		input:bind("d", function()
-			if self:can_piece_move_right() then
-				current_piece:set_x(current_piece:get_x() +1)
-			end
-		end)
+	input:bind("d", function()
+	  if self:can_piece_move_right() then
+      piece_x = piece_x + 1
+    end
+	end)
 
-		input:bind("a", function()
-			if self:can_piece_move_left() then
-				current_piece:set_x(current_piece:get_x() -1)
-			end
-		end)
-  end
- 
-
-
+	input:bind("a", function()
+		if self:can_piece_move_left() then
+			piece_x = piece_x -1
+		end
+	end)
+  
 end
+ 
 
 function Piece:update(dt)
 	timer = timer + dt
@@ -146,7 +143,6 @@ end
 function Piece:draw_moving_piece(shape)--drawing the moving piece
   for local_x = 1, piece_size do
     for local_y = 1, piece_size do
-        print(shape[local_x][local_y] )
         draw_block_shortcut(shape[local_x][local_y],local_x+piece_x,local_y+piece_y,"fill")
     end
   end
