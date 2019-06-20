@@ -13,7 +13,8 @@ function Stage:new(opts)
 	self.grid = self.interface:addGameObject("Grid",grid_x_start,grid_y_start)
 	self.pieces_array = {"Tall"}
 	self.current_piece = nil
-	self.current_piece = self.interface:addGameObject("Tall",3,3)
+	--self.current_piece = self.interface:addGameObject("Tall",3,3)
+	self.current_piece = self.interface:addGameObject("S",6,6)
 end
 
 function Stage:update(dt)

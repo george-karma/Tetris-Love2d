@@ -105,11 +105,14 @@ function Piece:move_piece_down(piece_gravity)
 end
 
 function Piece:can_piece_move_right() -- testing each individual chell of a piece to see it it goes off grid or if there is a occupied cell net to it
-  for local_x = 1, piece_size do
-    for local_y = 1, piece_size do
-      local cell_right_neighbor = piece_x + 1 + local_x --adding the x coordinate of the piece to the x coordinate of the cell +1 to refer to the cell next to the current cell
-      if self.shape[local_x][local_y] ~= "e" and
-        cell_right_neighbor > grid_obj:get_x_size() then
+  for x = 1, piece_size do
+    for y = 1, piece_size do
+      local cell_right_neighbor = piece_x + 1 + x --adding the x coordinate of the piece to the x coordinate of the cell +1 to refer to the cell next to the current cell
+      if self.shape[x][y] ~= "e" and
+        (cell_right_neighbor > grid_obj:get_x_size() or
+        Piece:does_not_colide(cell_right_neighbor, y+piece_y)
+        ) 
+        then
           return false
       end
     end
@@ -121,7 +124,10 @@ function Piece:can_piece_move_left() -- testing each individual chell of a piece
     for y = 1, piece_size do
       local cell_left_neighbor = piece_x + (x -1) --adding the x coordinate of the piece to the x coordinate of the cell +1 to refer to the cell next to the current cell
       if self.shape[x][y] ~= "e" and
-        cell_left_neighbor < 1 then
+        (cell_left_neighbor < 1 or
+        Piece:does_not_colide(cell_left_neighbor,y+piece_y)
+        )
+        then
           return  false
       end
     end
@@ -133,17 +139,30 @@ function Piece:can_piece_move_down()--can the piece move down
     for y = 1, piece_size do
       local cell_down_neighbor = piece_y + y + 1 --adding the x coordinate of the piece to the x coordinate of the cell +1 to refer to the cell next to the current cell
       if self.shape[x][y] ~= "e" and
-        cell_down_neighbor > grid_obj:get_y_size() then
+        (cell_down_neighbor > grid_obj:get_y_size() or
+        Piece:does_not_colide(x + piece_x,cell_down_neighbor)
+        ) 
+        then
           return  false
-      end
+        end
     end
   end
   return true
 end
+function Piece:does_not_colide(x_check, y_check)
+   if grid_obj:get_grid_at_location(x_check,y_check) =="e" then
+    return false
+   else
+    print(x_check .. " ".. y_check .. " colliding")
+    return true
+   end
+end
 function Piece:draw_moving_piece(shape)--drawing the moving piece
   for local_x = 1, piece_size do
     for local_y = 1, piece_size do
-        draw_block_shortcut(shape[local_x][local_y],local_x+piece_x,local_y+piece_y,"fill")
+        if shape[local_x][local_y] ~= "e" then
+          draw_block_shortcut(shape[local_x][local_y],local_x+piece_x,local_y+piece_y,"fill")
+        end
     end
   end
 end

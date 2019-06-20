@@ -10,7 +10,9 @@ function Grid:new(interface,x,y,opts)
 	block_size = 20 -- size of individual cells
 
 	inert_grid={} -- the matrix that stores pieces not moving, an array of arrays
-	define_inert(x_size,y_size)
+  define_inert(x_size,y_size)
+  inert_grid[3][13] = "i"
+  inert_grid[5][14] = "i"
 
 end
 
@@ -49,6 +51,12 @@ function draw_inert_grid()
       draw_block_shortcut(inert_grid[x][y],x,y,"fill")-- to figure out what color we should paint the current block, we look whats in the inert array at the current coordiantes and paint it that
     end
   end
+end
+function Grid: get_grid_at_location(x,y)
+  return inert_grid[x][y]
+end
+function Grid: set_grid_at_location(x,y,block)
+  inert_gridp[x][y] = block
 end
 function draw_block_shortcut(block,x,y,mode)
   Grid:draw_block(block,x,y,mode,block_distance,x_location,y_location,block_size)
