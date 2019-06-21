@@ -12,7 +12,11 @@ function Piece:new(interface,x,y,opts)
   self.creationTime = love.timer.getTime()
   self.dead = false
 	piece_size = 4 --how big a piece is on the x/y axis/ how manny elements there are in each sub-subarray
-	input:bind("x", function() self.shape= rotate_piece(self.shape) end)
+  input:bind("x", function() 
+    if can_rotate_piece(self.shape) then 
+      self.shape= rotate_piece(self.shape)
+    end
+   end)
 
 	input:bind("d", function()
 	  if self:can_piece_move_right() then
@@ -80,6 +84,25 @@ end
 
 function Piece:set_y(y_to_be_set)
 	piece_y = y_to_be_set
+end
+function can_rotate_piece(table)
+  local test_rotation  = rotate_piece(table)
+  for x = 1, piece_size do
+    for y =1, piece_size do
+      local block_x = x+piece_x
+      local block_y = y+piece_y
+      if test_rotation[x][y] ~= "e" and (
+        block_x < 1 or
+        block_x > grid_obj:get_x_size()or
+        block_y >grid_obj:get_y_size()
+        )
+        then
+          print("Cannot rotate here")
+        return false
+      end
+    end
+  end
+  return true
 end
 function rotate_piece(table)--rotates any table given by 90 degrees and returns it
   local rotated_table = {}
