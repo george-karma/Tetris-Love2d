@@ -4,10 +4,10 @@ local Tall = Piece:extend()
 function Tall:new(interface,x,y,opts)
 	Tall.super.new(self,interface,x,y,opts)
 	self.shape =  {
-					{"e","i","e","e"},
-					{"e","i","e","e"},
-					{"e","i","e","e"},
-					{"e","i","e","e"}
+					{"e","b","e","e"},
+					{"e","b","e","e"},
+					{"e","b","e","e"},
+					{"e","b","e","e"}
 					}
 end
 

@@ -8,10 +8,19 @@ function Grid:new(interface,x,y,opts)
 	y_size =18 -- number of cells from start
 	block_distance = 44 -- scalar for the whole grid, distance between cells
 	block_size = 20 -- size of individual cells
-
+  self.order = 5
+  
 	inert_grid={} -- the matrix that stores pieces not moving, an array of arrays
   define_inert(x_size,y_size)
- 
+ inert_grid[1][y_size] = "g"
+ inert_grid[2][y_size] = "e"
+ inert_grid[3][y_size] = "i"
+ inert_grid[4][y_size] = "j"
+ inert_grid[5][y_size] = "l"
+ inert_grid[6][y_size] = "z"
+ inert_grid[7][y_size] = "s"
+ inert_grid[8][y_size] = "b"
+ inert_grid[9][y_size] = "r"
   
 
 end
@@ -20,8 +29,8 @@ function Grid:update(dt)
 end
 
 function Grid:draw()
+  draw_inert_grid()
 	draw_grid()
-	draw_inert_grid()
 end
 function define_inert(x_size,y_size)--define the grid array variable, every block is set to "e", for empty
   for x = 1, x_size do --create as manny matrixes inside the array as the number of cells we have on the y axis

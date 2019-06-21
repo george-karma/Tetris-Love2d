@@ -4,6 +4,7 @@ Piece:implement(DrawBlock)
 
 function Piece:new(interface,x,y,opts)
   self.interface = interface 
+  self.order = 4
   piece_x, piece_y = x, y
   grid_obj = self.interface.screen.grid
 	self.timer = Timer()
