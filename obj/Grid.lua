@@ -1,6 +1,6 @@
 
 local Grid = Class:extend()
-Grid:implement(DrawBlock)
+Grid:implement(DrawBlock) --both the Grid and Piece obj needed this behaviour so i made it into a mixin
 
 function Grid:new(interface,x,y,opts)
   x_location,y_location = x,y
@@ -11,6 +11,8 @@ function Grid:new(interface,x,y,opts)
 
 	inert_grid={} -- the matrix that stores pieces not moving, an array of arrays
   define_inert(x_size,y_size)
+ 
+  
 
 end
 
@@ -50,6 +52,33 @@ function draw_inert_grid()
     end
   end
 end
+function Grid:check_for_completed_rows() 
+  for y = 1, y_size do
+    local row_completed = true -- check every row on the y axis
+    for x = 1, x_size do 
+      if inert_grid[x][y] == "e" then
+        row_completed = false -- if a block on the x axis is empty, then  we return false and not remove the row
+      end
+    end
+    if row_completed then 
+      print(y)
+      self:remove_row(y)
+    end
+  end
+end
+
+function Grid:remove_row(y_position) --we loop thorugh the grid and change every block to the block that is above it form the y position of the completed line
+  for y = y_position, 2,-1 do  -- we loop here until 2 because if we lop untill 1 we will get an error as the top-most row does not have anything above it
+    for x = 1, x_size do 
+      inert_grid[x][y] = inert_grid[x][y-1]
+    end
+  end
+  for x = 1, x_size do --here we clear the top most row of the grid
+    inert_grid[x][1] = "e"
+  end
+end
+
+
 function Grid: get_grid_at_location(x,y)
   return inert_grid[x][y]
 end

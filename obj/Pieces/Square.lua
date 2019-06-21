@@ -5,8 +5,8 @@ function Square:new(interface,x,y,opts)
 	Square.super.new(self,interface,x,y,opts)
 	self.shape =  {
 					{"e","e","e","e"},
-					{"e","i","i","e"},
-					{"e","i","i","e"},
+					{"e","l","l","e"},
+					{"e","l","l","e"},
 					{"e","e","e","e"}
 					}
 end

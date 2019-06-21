@@ -124,12 +124,13 @@ function Piece:move_piece_down(piece_gravity)
     if self:can_piece_move_down() then
       self:move_vertical(1)
     else
-      self:trash_and_add_to_grid()
+      self:clean()
     end 
   end
 end
-function Piece: trash_and_add_to_grid()
+function Piece: clean()
   self:add_to_grid(self.shape)
+  grid_obj:check_for_completed_rows()
   self.interface.screen:next_piece()
   self:trash()
   self.dead = true

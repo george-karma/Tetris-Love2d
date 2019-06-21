@@ -5,9 +5,9 @@ function L:new(interface,x,y,opts)
 	L.super.new(self,interface,x,y,opts)
 	self.shape =  {
 					{"e","e","e","e"},
-					{"e","i","e","e"},
-					{"e","i","e","e"},
-					{"e","i","i","e"}
+					{"e","g","e","e"},
+					{"e","g","e","e"},
+					{"e","g","g","e"}
 					}
 end
 

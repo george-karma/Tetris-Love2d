@@ -5,8 +5,8 @@ function S:new(interface,x,y,opts)
 	S.super.new(self,interface,x,y,opts)
 	self.shape =  {
 					{"e","e","e","e"},
-					{"e","e","i","i"},
-					{"e","i","i","e"},
+					{"e","e","r","r"},
+					{"e","r","r","e"},
 					{"e","e","e","e"}
 					}
 end

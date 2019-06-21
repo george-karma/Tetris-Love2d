@@ -5,8 +5,8 @@ function Z:new(interface,x,y,opts)
 	Z.super.new(self,interface,x,y,opts)
 	self.shape =  {
 					{"e","e","e","e"},
-					{"i","i","e","e"},
-					{"e","i","i","e"},
+					{"z","z","e","e"},
+					{"e","z","z","e"},
 					{"e","e","e","e"}
 					}
 end
