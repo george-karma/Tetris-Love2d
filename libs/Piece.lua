@@ -9,7 +9,8 @@ function Piece:new(interface,x,y,opts)
 	self.timer = Timer()
 	self.id = createRandomId()
 	self.dead = false
-	self.creationTime = love.timer.getTime()
+  self.creationTime = love.timer.getTime()
+  self.dead = false
 	piece_size = 4 --how big a piece is on the x/y axis/ how manny elements there are in each sub-subarray
 	input:bind("x", function() self.shape= rotate_piece(self.shape) end)
 
@@ -26,7 +27,6 @@ function Piece:new(interface,x,y,opts)
 	end)
   
 end
- 
 
 function Piece:update(dt)
 	timer = timer + dt
@@ -49,7 +49,7 @@ end
 
 --garbage collection, possibly not used, from older ptoject
 function Piece:trash()
-	self.timer:destroy()
+	if self.timer then self.timer:destroy() end
 	if self.collider then self.collider:destroy() end
 	if self.sound then self.sound = nil end
 end
@@ -100,10 +100,17 @@ function Piece:move_piece_down(piece_gravity)
     timer = timer - timer_limit
     if self:can_piece_move_down() then
       self:move_vertical(1)
-    end
+    else
+      self:trash_and_add_to_grid()
+    end 
   end
 end
-
+function Piece: trash_and_add_to_grid()
+  self:add_to_grid(self.shape)
+  self.interface.screen:next_piece()
+  self:trash()
+  self.dead = true
+end
 function Piece:can_piece_move_right() -- testing each individual chell of a piece to see it it goes off grid or if there is a occupied cell net to it
   for x = 1, piece_size do
     for y = 1, piece_size do
@@ -157,11 +164,20 @@ function Piece:does_not_colide(x_check, y_check)
     return true
    end
 end
+function Piece:add_to_grid(shape)
+  for x = 1, piece_size do
+    for y =1, piece_size do
+      if shape[x][y] ~= "e" then 
+        grid_obj:set_grid_at_location(shape[x][y],x+piece_x,y+piece_y)
+      end
+    end
+  end
+end
 function Piece:draw_moving_piece(shape)--drawing the moving piece
-  for local_x = 1, piece_size do
-    for local_y = 1, piece_size do
-        if shape[local_x][local_y] ~= "e" then
-          draw_block_shortcut(shape[local_x][local_y],local_x+piece_x,local_y+piece_y,"fill")
+  for x = 1, piece_size do
+    for y = 1, piece_size do
+        if shape[x][y] ~= "e" then
+          draw_block_shortcut(shape[x][y],x+piece_x,y+piece_y,"fill")
         end
     end
   end
@@ -169,4 +185,5 @@ end
 function draw_block_shortcut(block,x,y,mode)
   draw_block(block,x,y,mode, grid_obj:get_block_distance(), grid_obj:get_x_start(),grid_obj:get_y_start(),grid_obj:get_block_size())
 end
+
 return Piece

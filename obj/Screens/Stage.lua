@@ -8,13 +8,12 @@ function Stage:new(opts)
 		for k,v in pairs(opts) do self[k] = v end
 	end
 	grid_x_start = 1--decides where the grid stats on the x axis
-	grid_y_start = 200--decides where the grid starts on the y axis
+	grid_y_start = 150--decides where the grid starts on the y axis
 
 	self.grid = self.interface:addGameObject("Grid",grid_x_start,grid_y_start)
-	self.pieces_array = {"Tall"}
+	pieces_array = {"Tall","L","S","Square","Tank","Z"}
 	self.current_piece = nil
-	--self.current_piece = self.interface:addGameObject("Tall",3,3)
-	self.current_piece = self.interface:addGameObject("S",6,6)
+	self.current_piece = self:next_piece()
 end
 
 function Stage:update(dt)
@@ -25,5 +24,12 @@ end
 function Stage:draw()
 	self.interface:draw()
 end
+function Stage:next_piece()
+	local rand_number = love.math.random(6)
+	print(pieces_array[rand_number])
+	local current_piece = self.interface:addGameObject(pieces_array[rand_number],4,0)
+	return current_piece
+end
+
 
 return Stage

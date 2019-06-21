@@ -6,13 +6,11 @@ function Grid:new(interface,x,y,opts)
   x_location,y_location = x,y
 	x_size = 10 -- number of cells from start
 	y_size =18 -- number of cells from start
-	block_distance = 40 -- scalar for the whole grid, distance between cells
+	block_distance = 44 -- scalar for the whole grid, distance between cells
 	block_size = 20 -- size of individual cells
 
 	inert_grid={} -- the matrix that stores pieces not moving, an array of arrays
   define_inert(x_size,y_size)
-  inert_grid[3][13] = "i"
-  inert_grid[5][14] = "i"
 
 end
 
@@ -55,8 +53,8 @@ end
 function Grid: get_grid_at_location(x,y)
   return inert_grid[x][y]
 end
-function Grid: set_grid_at_location(x,y,block)
-  inert_gridp[x][y] = block
+function Grid: set_grid_at_location(block,x,y)
+  inert_grid[x][y] = block
 end
 function draw_block_shortcut(block,x,y,mode)
   Grid:draw_block(block,x,y,mode,block_distance,x_location,y_location,block_size)
