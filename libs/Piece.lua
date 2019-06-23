@@ -19,6 +19,7 @@ function Piece:new(interface,x,y,opts)
     end
    end)
 
+   
 	input:bind("d", function()
 	  if self:can_piece_move_right() then
       piece_x = piece_x + 1
@@ -95,7 +96,8 @@ function can_rotate_piece(table)
       if test_rotation[x][y] ~= "e" and (
         block_x < 1 or
         block_x > grid_obj:get_x_size()or
-        block_y >grid_obj:get_y_size()
+        block_y >grid_obj:get_y_size() or 
+        grid_obj:get_grid_at_location(block_x,block_y) ~="e"
         )
         then
           print("Cannot rotate here")

@@ -20,7 +20,7 @@ end
 
 function Grid:draw()
   draw_inert_grid()
-	--draw_grid()
+	draw_grid()
 end
 function define_inert(x_size,y_size)--define the grid array variable, every block is set to "e", for empty
   for x = 1, x_size do --create as manny matrixes inside the array as the number of cells we have on the y axis
