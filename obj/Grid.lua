@@ -12,6 +12,7 @@ function Grid:new(interface,x,y,opts)
   
 	inert_grid={} -- the matrix that stores pieces not moving, an array of arrays
   define_inert(x_size,y_size)
+
  inert_grid[1][y_size] = "g"
  inert_grid[2][y_size] = "e"
  inert_grid[3][y_size] = "i"

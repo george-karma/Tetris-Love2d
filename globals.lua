@@ -1,3 +1,4 @@
+--in love2d 11, rgb valuess go from 0 to 1, not from 0 to 255
 colours_array = { --array for diffrent coloured blocks
 g = {0,255,0},
 e = {0,0,0},
