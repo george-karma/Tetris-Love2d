@@ -13,6 +13,7 @@ function Piece:new(interface,x,y,opts)
   self.creationTime = love.timer.getTime()
   self.dead = false
 	piece_size = 4 --how big a piece is on the x/y axis/ how manny elements there are in each sub-subarray
+  
   input:bind("x", function() 
     if can_rotate_piece(self.shape) then 
       self.shape= rotate_piece(self.shape)

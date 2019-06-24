@@ -4,12 +4,9 @@ local Stage = Class:extend()
 function Stage:new(opts)
 -----------self.director = Director(self)---------------------------
 	self.interface = Interface(self)--passign the current screen as an argument so we can acces the interafece
-	if opts ~= nil then
-		for k,v in pairs(opts) do self[k] = v end
-	end
 	grid_x_start = 1--decides where the grid stats on the x axis
 	grid_y_start = 150--decides where the grid starts on the y axis
-
+	self.interface:addPhysicsWorld()
 	self.grid = self.interface:addGameObject("Grid",grid_x_start,grid_y_start)
 	pieces_array = {"Tall","L","S","Square","Tank","Z"}
 	self.current_piece = nil

@@ -5,6 +5,7 @@ Class = require 'libs/classic-master/classic'
 Input = require 'libs/boipushy-master/input'
 Timer = require 'libs/chrono-master/Timer'
 Piece = require 'libs/Piece'
+Physics = require "libs/windfield"
 
 function  love.load()
   love.window.setMode(540, 966)

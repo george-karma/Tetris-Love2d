@@ -4,6 +4,7 @@ Grid:implement(DrawBlock) --both the Grid and Piece obj needed this behaviour so
 
 function Grid:new(interface,x,y,opts)
   x_location,y_location = x,y
+  self.interface = interface
 	x_size = 10 -- number of cells from start
 	y_size =18 -- number of cells from start
 	block_distance = 44 -- scalar for the whole grid, distance between cells
@@ -19,6 +20,7 @@ function Grid:update(dt)
 end
 
 function Grid:draw()
+  self.interface:addGameObject("ExplosionFX", 200,200)
   draw_inert_grid()
 	draw_grid()
 end
@@ -70,6 +72,7 @@ function Grid:remove_row(y_position) --we loop thorugh the grid and change every
   for y = y_position, 2,-1 do  -- we loop here until 2 because if we lop untill 1 we will get an error as the top-most row does not have anything above it
     for x = 1, x_size do 
       inert_grid[x][y] = inert_grid[x][y-1]
+      self.interface:addGameObject("ExplosionFX",x,y)
     end
   end
   for x = 1, x_size do --here we clear the top most row of the grid
