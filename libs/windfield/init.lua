@@ -205,7 +205,7 @@ end
 function World:collisionEventsClear()
     local bodies = self.box2d_world:getBodies()
     for _, body in ipairs(bodies) do
-        local collider = body:getFixtureList()[1]:getUserData()
+        local collider = body:getFixtures()[1]:getUserData()
         collider:collisionEventsClear()
     end
 end

@@ -20,7 +20,6 @@ function Grid:update(dt)
 end
 
 function Grid:draw()
-  self.interface:addGameObject("ExplosionFX", 200,200)
   draw_inert_grid()
 	draw_grid()
 end
