@@ -13,11 +13,13 @@ function Stage:new(opts)
 	self.current_piece = self:next_piece()
 	
 	
+	
 end
 
 function Stage:update(dt)
 	self.interface:update(dt)
 	self.interface:addGameObject("ExplosionFX", 100,100)
+	
 	
 	--self.director:update(dt)------------------------------------------------
 end

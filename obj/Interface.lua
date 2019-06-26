@@ -20,6 +20,7 @@ function Interface:update(dt)
 		if gameObject.dead then
 			table.remove(self.gameObjectArray, i)
 			gameObject:trash()
+			
 
 		end
 		gameObject:update(dt)
