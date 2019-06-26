@@ -10,13 +10,14 @@ function Grid:new(interface,x,y,opts)
 	block_distance = 44 -- scalar for the whole grid, distance between cells
 	block_size = 20 -- size of individual cells
   self.order = 1
-  
+  self.timer = Timer()
+  self.interface:addGameObject("ExplosionFX",100,100,{size = 50})
 	inert_grid={} -- the matrix that stores pieces not moving, an array of arrays
   define_inert(x_size,y_size)
-  
 end
 
 function Grid:update(dt)
+  self.timer:update(dt)
 end
 
 function Grid:draw()
@@ -38,6 +39,7 @@ function draw_grid()
   --for every x and y position do the following
   for x = 1 , x_size do
     for y = 1, y_size do
+      
       --reset the colour and draw the grid outline
       love.graphics.setColor(255, 255,255)
       draw_block_shortcut("g",x,y,"line") --colour of block, size and style
@@ -67,18 +69,31 @@ function Grid:check_for_completed_rows()
   end
 end
 
-function Grid:remove_row(y_position) --we loop thorugh the grid and change every block to the block that is above it form the y position of the completed line
-  for y = y_position, 2,-1 do  -- we loop here until 2 because if we lop untill 1 we will get an error as the top-most row does not have anything above it
-    for x = 1, x_size do 
-      inert_grid[x][y] = inert_grid[x][y-1]
-      self.interface:addGameObject("ExplosionFX",x,y)
+function Grid:remove_row(y_location) --we loop thorugh the grid and change every block to the block that is above it form the y position of the completed line
+  for x = 1, x_size do
+    self.interface:addGameObject("ExplosionFX",
+    get_block_location_on_screen(x,y_location)["x"],
+    get_block_location_on_screen(x,y_location)["y"],
+    {size = 50})
+  end
+  self.timer:after(0.7, function() 
+    for y = y_location, 2,-1 do  -- we loop here until 2 because if we lop untill 1 we will get an error as the top-most row does not have anything above it
+      for x = 1, x_size do 
+       inert_grid[x][y] = inert_grid[x][y-1]
+     end
+   end
+   for x = 1, x_size do --here we clear the top most row of the grid
+      inert_grid[x][1] = "e"
     end
-  end
-  for x = 1, x_size do --here we clear the top most row of the grid
-    inert_grid[x][1] = "e"
-  end
+  end)
 end
 
+function get_block_location_on_screen(block_x, block_y)
+  local x = block_x * block_distance + x_location
+  local y = block_y * block_distance + y_location
+  local location = { x = x, y = y}
+  return location
+end
 
 function Grid: get_grid_at_location(x,y)
   return inert_grid[x][y]

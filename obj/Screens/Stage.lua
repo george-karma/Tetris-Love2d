@@ -11,6 +11,7 @@ function Stage:new(opts)
 	pieces_array = {"Tall","L","S","Square","Tank","Z"}
 	self.current_piece = nil
 	self.current_piece = self:next_piece()
+
 	
 	
 	
@@ -18,9 +19,6 @@ end
 
 function Stage:update(dt)
 	self.interface:update(dt)
-	self.interface:addGameObject("ExplosionFX", 100,100)
-	
-	
 	--self.director:update(dt)------------------------------------------------
 end
 
