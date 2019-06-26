@@ -2,6 +2,7 @@ local ExplosionFX = Class:extend()
 
 function ExplosionFX:new(interface,x,y,opts)
 	self.interface = interface
+	self.type = "FX"
 	self.x, self.y = x,y
 	self.timer = Timer()
 	self.order = 5

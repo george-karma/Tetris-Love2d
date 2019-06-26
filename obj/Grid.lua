@@ -6,14 +6,17 @@ function Grid:new(interface,x,y,opts)
   x_location,y_location = x,y
   self.interface = interface
 	x_size = 10 -- number of cells from start
-	y_size =18 -- number of cells from start
-	block_distance = 44 -- scalar for the whole grid, distance between cells
-	block_size = 20 -- size of individual cells
+  y_size =22 -- number of cells from start
+  y_size_playable = 18
+	block_distance = 41 -- scalar for the whole grid, distance between cells
+	block_size = 19 -- size of individual cells
+  self.type = "grid"
   self.order = 1
   self.timer = Timer()
   self.interface:addGameObject("ExplosionFX",100,100,{size = 50})
 	inert_grid={} -- the matrix that stores pieces not moving, an array of arrays
   define_inert(x_size,y_size)
+
 end
 
 function Grid:update(dt)
@@ -39,10 +42,14 @@ function draw_grid()
   --for every x and y position do the following
   for x = 1 , x_size do
     for y = 1, y_size do
-      
-      --reset the colour and draw the grid outline
-      love.graphics.setColor(255, 255,255)
-      draw_block_shortcut("g",x,y,"line") --colour of block, size and style
+      if y <= 4 then
+        love.graphics.setColor(255, 255,255)
+        draw_block_shortcut("b",x,y,"line")
+      else
+        --reset the colour and draw the grid outline
+        love.graphics.setColor(255, 255,255)
+        draw_block_shortcut("g",x,y,"line") --colour of block, size and style
+      end
     end
   end
 end
@@ -87,7 +94,15 @@ function Grid:remove_row(y_location) --we loop thorugh the grid and change every
     end
   end)
 end
-
+function Grid:reset()
+  self:trash()
+  self.dead = true
+end
+function Grid:trash()
+	if self.timer then self.timer:destroy() end
+	if self.collider then self.collider:destroy() end
+  if self.sound then self.sound = nil end
+end
 function get_block_location_on_screen(block_x, block_y)
   local x = block_x * block_distance + x_location
   local y = block_y * block_distance + y_location

@@ -7,27 +7,32 @@ function Piece:new(interface,x,y,opts)
   self.order = 3
   piece_x, piece_y = x, y
   grid_obj = self.interface.screen.grid
-	self.timer = Timer()
+  self.timer = Timer()
+  self.type = "Piece"
 	self.id = createRandomId()
 	self.dead = false
   self.creationTime = love.timer.getTime()
-  self.dead = false
 	piece_size = 4 --how big a piece is on the x/y axis/ how manny elements there are in each sub-subarray
-  
-  input:bind("x", function() 
+  self.input = Input()
+  self.input:bind("c", function()
+    while self:can_piece_move_down() do 
+      self:move_vertical(1)
+    end
+  end)
+  self.input:bind("x", function() 
     if can_rotate_piece(self.shape) then 
       self.shape= rotate_piece(self.shape)
     end
    end)
 
    
-	input:bind("d", function()
+	self.input:bind("d", function()
 	  if self:can_piece_move_right() then
       piece_x = piece_x + 1
     end
 	end)
 
-	input:bind("a", function()
+	self.input:bind("a", function()
 		if self:can_piece_move_left() then
 			piece_x = piece_x -1
 		end
@@ -54,21 +59,6 @@ function Piece:draw()
   
 end
 
---garbage collection, possibly not used, from older ptoject
-function Piece:trash()
-	if self.timer then self.timer:destroy() end
-	if self.collider then self.collider:destroy() end
-	if self.sound then self.sound = nil end
-end
-
-function createRandomId()
-    local fn = function(x)
-        local r = love.math.random(16) - 1
-        r = (x == "x") and (r + 1) or (r % 4) + 9
-        return ("0123456789abcdef"):sub(r, r)
-    end
-    return (("xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"):gsub("[xy]", fn))
-end
 function Piece:move_vertical(y_change)
 	piece_y = piece_y + y_change
 end
@@ -108,6 +98,18 @@ function can_rotate_piece(table)
   end
   return true
 end
+
+function Piece:move_piece_down(piece_gravity)
+  local timer_limit = piece_gravity --how long until when the piece moves again
+  if timer >= timer_limit then
+    timer = timer - timer_limit
+    if self:can_piece_move_down() then
+      self:move_vertical(1)
+    else
+      self:clean()
+    end 
+  end
+end
 function rotate_piece(table)--rotates any table given by 90 degrees and returns it
   local rotated_table = {}
   for i = 1,#table[1] do
@@ -121,24 +123,6 @@ function rotate_piece(table)--rotates any table given by 90 degrees and returns 
   return rotated_table
 end
 
-function Piece:move_piece_down(piece_gravity)
-  local timer_limit = piece_gravity --how long until when the piece moves again
-  if timer >= timer_limit then
-    timer = timer - timer_limit
-    if self:can_piece_move_down() then
-      self:move_vertical(1)
-    else
-      self:clean()
-    end 
-  end
-end
-function Piece: clean()
-  self:add_to_grid(self.shape)
-  grid_obj:check_for_completed_rows()
-  self.interface.screen:next_piece()
-  self:trash()
-  self.dead = true
-end
 function Piece:can_piece_move_right() -- testing each individual chell of a piece to see it it goes off grid or if there is a occupied cell net to it
   for x = 1, piece_size do
     for y = 1, piece_size do
@@ -212,6 +196,34 @@ function Piece:draw_moving_piece(shape)--drawing the moving piece
 end
 function draw_block_shortcut(block,x,y,mode)
   draw_block(block,x,y,mode, grid_obj:get_block_distance(), grid_obj:get_x_start(),grid_obj:get_y_start(),grid_obj:get_block_size())
+end
+--all the functions the piece needs to do upon dying
+function Piece:clean()
+  self:add_to_grid(self.shape) --add itself to the inert grid so we free the update tree
+  grid_obj:check_for_completed_rows()--check for completed rows created by the new piece
+  self.interface.screen:next_piece() --move on to the next piece
+  self:trash() --any leftover garbagecollection
+  self.dead = true --lettign the interface know that the object is now dead and can be removed from the update que
+end
+function Piece:reset() --called when the game is reset
+    self:trash()
+    self.dead = true
+end
+--garbage collection
+function Piece:trash()
+	if self.timer then self.timer:destroy() end
+	if self.collider then self.collider:destroy() end
+  if self.sound then self.sound = nil end
+  if self.input then self.input:unbindAll() end
+end
+
+function createRandomId()
+    local fn = function(x)
+        local r = love.math.random(16) - 1
+        r = (x == "x") and (r + 1) or (r % 4) + 9
+        return ("0123456789abcdef"):sub(r, r)
+    end
+    return (("xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"):gsub("[xy]", fn))
 end
 
 return Piece

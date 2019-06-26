@@ -26,7 +26,19 @@ function Interface:update(dt)
 		gameObject:update(dt)
 	end
 end
-
+function Interface:display_update_que()
+	for i = #self.gameObjectArray,1, -1 do
+		local gameObject = self.gameObjectArray[i]
+		local count = 0
+		for i = #self.gameObjectArray,1, -1 do
+			if self.gameObjectArray[i].type == gameObject.type then
+				count = count +1
+			end
+		end
+		print(gameObject.type .. "  Found " .. count .. " instances")
+				
+	end
+end
 function Interface:draw()
 	table.sort(self.gameObjectArray, function(a,b)
 			if a.order and b.order then
