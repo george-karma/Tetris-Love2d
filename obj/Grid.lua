@@ -8,6 +8,7 @@ function Grid:new(interface,x,y,opts)
 	x_size = 10 -- number of cells from start
   y_size =22 -- number of cells from start
   y_size_playable = 18
+  y_size_playable_start = y_size - y_size_playable
 	block_distance = 41 -- scalar for the whole grid, distance between cells
 	block_size = 19 -- size of individual cells
   self.type = "grid"
@@ -16,7 +17,27 @@ function Grid:new(interface,x,y,opts)
   self.interface:addGameObject("ExplosionFX",100,100,{size = 50})
 	inert_grid={} -- the matrix that stores pieces not moving, an array of arrays
   define_inert(x_size,y_size)
+  inert_grid[1][22] = "i"
+  inert_grid[2][22] = "i"
+  inert_grid[3][22] = "i"
+  inert_grid[4][22] = "i"
+  inert_grid[5][22] = "i"
+  inert_grid[6][22] = "i"
+  inert_grid[7][22] = "i"
+  inert_grid[8][22] = "i"
+  inert_grid[9][22] = "i"
+  inert_grid[10][22] = "i"
 
+  inert_grid[1][21] = "i"
+  inert_grid[2][21] = "i"
+  inert_grid[3][21] = "i"
+  inert_grid[4][21] = "i"
+  inert_grid[5][21] = "i"
+  inert_grid[6][21] = "i"
+  inert_grid[7][21] = "i"
+  inert_grid[8][21] = "i"
+  inert_grid[9][21] = "i"
+  inert_grid[10][21] = "i"
 end
 
 function Grid:update(dt)
@@ -62,7 +83,7 @@ function draw_inert_grid()
   end
 end
 function Grid:check_for_completed_rows() 
-  for y = 1, y_size do
+  for y = y_size, y_size_playable_start , -1 do
     local row_completed = true -- check every row on the y axis
     for x = 1, x_size do 
       if inert_grid[x][y] == "e" then
@@ -84,16 +105,24 @@ function Grid:remove_row(y_location) --we loop thorugh the grid and change every
     {size = 50})
   end
   self.timer:after(0.7, function() 
-    for y = y_location, 2,-1 do  -- we loop here until 2 because if we lop untill 1 we will get an error as the top-most row does not have anything above it
-      for x = 1, x_size do 
+    for x = 1, x_size do
+      inert_grid[x][y_location] = "e"
+    end
+    self:move_rows_down(y_location)
+  end)
+end
+
+function Grid:move_rows_down(y_location)
+  for y = y_location, (y_size_playable_start-1) ,-1 do  -- we loop here until 2 because if we lop untill 1 we will get an error as the top-most row does not have anything above it
+    for x = 1, x_size do
        inert_grid[x][y] = inert_grid[x][y-1]
      end
    end
    for x = 1, x_size do --here we clear the top most row of the grid
-      inert_grid[x][1] = "e"
+     inert_grid[x][4] = "e"
     end
-  end)
 end
+
 function Grid:reset()
   self:trash()
   self.dead = true
@@ -109,6 +138,7 @@ function get_block_location_on_screen(block_x, block_y)
   local location = { x = x, y = y}
   return location
 end
+
 
 function Grid: get_grid_at_location(x,y)
   return inert_grid[x][y]

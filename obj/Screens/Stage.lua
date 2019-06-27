@@ -8,7 +8,8 @@ function Stage:new(opts)
 	grid_x_start = 1--decides where the grid stats on the x axis
 	grid_y_start = 1--decides where the grid starts on the y axis
 	self.grid = self.interface:addGameObject("Grid",grid_x_start,grid_y_start)
-	pieces_array = {"Tall","L","S","Square","Tank","Z"}
+	--pieces_array = {"Tall","L","S","Square","Tank","Z"}
+	pieces_array = {"Tall"}
 	self.current_piece = self:next_piece()
 	input:bind("r", function()
 		self:reset()
@@ -28,7 +29,7 @@ function Stage:draw()
 	self.interface:draw()
 end
 function Stage:next_piece()
-	local rand_number = love.math.random(6)
+	local rand_number = love.math.random(1)
 	print(pieces_array[rand_number])
 	local current_piece = self.interface:addGameObject(pieces_array[rand_number],4,0)
 	return current_piece
