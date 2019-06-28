@@ -83,33 +83,49 @@ function draw_inert_grid()
   end
 end
 function Grid:check_for_completed_rows() 
-  for y = y_size, y_size_playable_start , -1 do
+  for y = y_size_playable_start, y_size , 1 do -- from the top most playable row (4) to the bototm most row (22)
     local row_completed = true -- check every row on the y axis
     for x = 1, x_size do 
       if inert_grid[x][y] == "e" then
         row_completed = false -- if a block on the x axis is empty, then  we return false and not remove the row
       end
     end
-    if row_completed then 
-      print(y)
-      self:remove_row(y)
+    if row_completed and y ~= y_size_playable_start then  --if the row is compolete and it is not the top most row
+     for x = 1, x_size do
+        self.interface:addGameObject("ExplosionFX",
+        get_block_location_on_screen(x,y)["x"],
+        get_block_location_on_screen(x,y)["y"],
+        {size = 50})
+     end
+      for y_move = y, (y_size_playable_start - 1), -1 do  --from current y to secont top most row of plyabl earea (y to 4)
+        for x = 1, x_size do
+          inert_grid[x][y_move] = inert_grid[x][y_move-1]
+        end
+      end
+      --self:remove_row(y)
+
     end
   end
 end
 
-function Grid:remove_row(y_location) --we loop thorugh the grid and change every block to the block that is above it form the y position of the completed line
-  for x = 1, x_size do
+
+
+
+--------------------------
+function Grid:remove_row_unused(y_location) --we loop thorugh the grid and change every block to the block that is above it form the y position of the completed line
+  --[[for x = 1, x_size do
     self.interface:addGameObject("ExplosionFX",
     get_block_location_on_screen(x,y_location)["x"],
     get_block_location_on_screen(x,y_location)["y"],
     {size = 50})
-  end
-  self.timer:after(0.7, function() 
+  end--]]
+  --self.timer:after(0.7, function() 
     for x = 1, x_size do
       inert_grid[x][y_location] = "e"
     end
     self:move_rows_down(y_location)
-  end)
+  --end)
+  print("removed row " .. y_location)
 end
 
 function Grid:move_rows_down(y_location)
@@ -122,6 +138,21 @@ function Grid:move_rows_down(y_location)
      inert_grid[x][4] = "e"
     end
 end
+-------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function Grid:reset()
   self:trash()
