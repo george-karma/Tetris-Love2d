@@ -14,9 +14,10 @@ function Grid:new(interface,x,y,opts)
   self.type = "grid"
   self.order = 1
   self.timer = Timer()
-  self.interface:addGameObject("ExplosionFX",100,100,{size = 50})
+  --self.interface:addGameObject("ExplosionFX",100,100,{size = 50})
 	inert_grid={} -- the matrix that stores pieces not moving, an array of arrays
   define_inert(x_size,y_size)
+  --[[
   inert_grid[1][22] = "i"
   inert_grid[2][22] = "i"
   inert_grid[3][22] = "i"
@@ -38,6 +39,7 @@ function Grid:new(interface,x,y,opts)
   inert_grid[8][21] = "i"
   inert_grid[9][21] = "i"
   inert_grid[10][21] = "i"
+  ]]--
 end
 
 function Grid:update(dt)
@@ -102,67 +104,30 @@ function Grid:check_for_completed_rows()
           inert_grid[x][y_move] = inert_grid[x][y_move-1]
         end
       end
-      --self:remove_row(y)
-
     end
   end
 end
-
-
-
-
---------------------------
-function Grid:remove_row_unused(y_location) --we loop thorugh the grid and change every block to the block that is above it form the y position of the completed line
-  --[[for x = 1, x_size do
-    self.interface:addGameObject("ExplosionFX",
-    get_block_location_on_screen(x,y_location)["x"],
-    get_block_location_on_screen(x,y_location)["y"],
-    {size = 50})
-  end--]]
-  --self.timer:after(0.7, function() 
-    for x = 1, x_size do
-      inert_grid[x][y_location] = "e"
+function Grid:is_game_over()
+  for y = 1, y_size_playable_start, 1 do
+    for x = 1, x_size do 
+      if inert_grid[x][y] ~= "e"  then 
+        return true
+      end
     end
-    self:move_rows_down(y_location)
-  --end)
-  print("removed row " .. y_location)
+  end 
+  return false
 end
-
-function Grid:move_rows_down(y_location)
-  for y = y_location, (y_size_playable_start-1) ,-1 do  -- we loop here until 2 because if we lop untill 1 we will get an error as the top-most row does not have anything above it
-    for x = 1, x_size do
-       inert_grid[x][y] = inert_grid[x][y-1]
-     end
-   end
-   for x = 1, x_size do --here we clear the top most row of the grid
-     inert_grid[x][4] = "e"
-    end
-end
--------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function Grid:reset()
   self:trash()
   self.dead = true
 end
+
 function Grid:trash()
 	if self.timer then self.timer:destroy() end
 	if self.collider then self.collider:destroy() end
   if self.sound then self.sound = nil end
 end
+
 function get_block_location_on_screen(block_x, block_y)
   local x = block_x * block_distance + x_location
   local y = block_y * block_distance + y_location
@@ -170,22 +135,26 @@ function get_block_location_on_screen(block_x, block_y)
   return location
 end
 
-
 function Grid: get_grid_at_location(x,y)
   return inert_grid[x][y]
 end
+
 function Grid: set_grid_at_location(block,x,y)
   inert_grid[x][y] = block
 end
+
 function draw_block_shortcut(block,x,y,mode)
   Grid:draw_block(block,x,y,mode,block_distance,x_location,y_location,block_size)
 end
+
 function Grid:get_x_size()
 	return x_size
 end
+
 function Grid:get_y_size()
 	return y_size
 end
+
 function Grid:get_inert_grid()
   return inert_grid
 end

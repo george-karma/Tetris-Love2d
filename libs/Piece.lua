@@ -54,7 +54,7 @@ end
 
 function Piece:draw()
   if self.shape then
-    Piece:draw_moving_piece(self.shape)
+    self:draw_moving_piece(self.shape)
   end
   
 end
@@ -201,9 +201,13 @@ end
 function Piece:clean()
   self:add_to_grid(self.shape) --add itself to the inert grid so we free the update tree
   grid_obj:check_for_completed_rows()--check for completed rows created by the new piece
-  self.interface.screen:next_piece() --move on to the next piece
-  self:trash() --any leftover garbagecollection
-  self.dead = true --lettign the interface know that the object is now dead and can be removed from the update que
+  if grid_obj:is_game_over() then
+      self.interface.screen:reset()
+  else
+    self.interface.screen:next_piece() --move on to the next piece
+    self:trash() --any leftover garbagecollection
+    self.dead = true --lettign the interface know that the object is now dead and can be removed from the update que
+  end
 end
 function Piece:reset() --called when the game is reset
     self:trash()
