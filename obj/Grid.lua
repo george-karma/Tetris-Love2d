@@ -93,19 +93,26 @@ function Grid:check_for_completed_rows()
       end
     end
     if row_completed and y ~= y_size_playable_start then  --if the row is compolete and it is not the top most row
-     for x = 1, x_size do
-        self.interface:addGameObject("ExplosionFX",
-        get_block_location_on_screen(x,y)["x"],
-        get_block_location_on_screen(x,y)["y"],
-        {size = 50})
-     end
+      self:clear_animaiton(y)
       for y_move = y, (y_size_playable_start - 1), -1 do  --from current y to secont top most row of plyabl earea (y to 4)
         for x = 1, x_size do
           inert_grid[x][y_move] = inert_grid[x][y_move-1]
         end
       end
+
     end
   end
+end
+function Grid:clear_animaiton(y_location)
+  for x = 1, x_size do
+    self.interface:addGameObject("ExplosionFX",
+    get_block_location_on_screen(x,y_location)["x"],
+    get_block_location_on_screen(x,y_location)["y"],
+    {size = 50})
+ end 
+end
+function Grid:alternate_clear_animaiton(y_location)
+  print("function alternate_clear_animaiton not implemented")
 end
 function Grid:is_game_over()
   for y = 1, y_size_playable_start, 1 do
