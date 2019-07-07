@@ -8,6 +8,7 @@ function Stage:new(opts)
 	grid_x_start = 1--decides where the grid stats on the x axis
 	grid_y_start = 1--decides where the grid starts on the y axis
 	self.grid = self.interface:addGameObject("Grid",grid_x_start,grid_y_start)
+	self.score = self.interface:addGameObject("Score", 450,200, {sx = 1.5, sy = 1.5})
 	pieces_array = {"Tall","L","S","Square","Tank","Z"}
 	--pieces_array = {"Tall"}
 	self.current_piece = self:next_piece()

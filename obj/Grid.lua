@@ -67,7 +67,7 @@ function draw_grid()
     for y = 1, y_size do
       if y <= 4 then
         love.graphics.setColor(255, 255,255)
-        draw_block_shortcut("b",x,y,"line")
+        draw_block_shortcut("e",x,y,"line")
       else
         --reset the colour and draw the grid outline
         love.graphics.setColor(255, 255,255)
