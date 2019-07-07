@@ -17,7 +17,7 @@ function Grid:new(interface,x,y,opts)
   --self.interface:addGameObject("ExplosionFX",100,100,{size = 50})
 	inert_grid={} -- the matrix that stores pieces not moving, an array of arrays
   define_inert(x_size,y_size)
-  --[[
+  
   inert_grid[1][22] = "i"
   inert_grid[2][22] = "i"
   inert_grid[3][22] = "i"
@@ -39,7 +39,7 @@ function Grid:new(interface,x,y,opts)
   inert_grid[8][21] = "i"
   inert_grid[9][21] = "i"
   inert_grid[10][21] = "i"
-  ]]--
+
 end
 
 function Grid:update(dt)
@@ -85,6 +85,7 @@ function draw_inert_grid()
   end
 end
 function Grid:check_for_completed_rows() 
+  local rows_cleared = 0
   for y = y_size_playable_start, y_size , 1 do -- from the top most playable row (4) to the bototm most row (22)
     local row_completed = true -- check every row on the y axis
     for x = 1, x_size do 
@@ -93,14 +94,22 @@ function Grid:check_for_completed_rows()
       end
     end
     if row_completed and y ~= y_size_playable_start then  --if the row is compolete and it is not the top most row
+      rows_cleared = rows_cleared + 1
       self:clear_animaiton(y)
       for y_move = y, (y_size_playable_start - 1), -1 do  --from current y to secont top most row of plyabl earea (y to 4)
         for x = 1, x_size do
           inert_grid[x][y_move] = inert_grid[x][y_move-1]
         end
       end
-
     end
+  end
+  if rows_cleared > 0  then 
+    if rows_cleared == 1 then
+      self.interface.screen.score:restart_combo_timer()
+    elseif rows_cleared >1 then
+      self.interface.screen.score:set_multi(rows_cleared)
+    end
+    self.interface.screen.score:add_score(rows_cleared * 100)
   end
 end
 function Grid:clear_animaiton(y_location)

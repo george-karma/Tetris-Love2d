@@ -39,6 +39,8 @@ function Stage:reset()
 	self.grid:reset()
 	self.grid = nil
 	self.grid = self.interface:addGameObject("Grid",grid_x_start,grid_y_start)
+	self.score:reset_score()
+	self.score:trash()
 	--[[
 	self.current_piece:reset()
 	self.current_piece = nil
