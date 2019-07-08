@@ -12,12 +12,12 @@ function Score:new(interface,x,y,opts)
   self.sy = opts.sy or 1
   self.ox = opts.ox or 0 
   self.oy = opts.oy or 0 
-  self.radius_visual = 30
-  self.radius_tween = 0
+  self.radius_visual = 30.0
+  self.radius_tween = 0.0
   self.multi = 1 --the multiplier applied to the score
   self.combo = 0
   self.max_multi = 6
-  self.time_to_combo = 15 --the time before the multiplier runs out
+  self.time_to_combo = 4 --the time before the multiplier runs out
   font = love.graphics.newFont("arial.ttf")
   font:setFilter("nearest", "nearest")
 end
@@ -41,8 +41,8 @@ function Score:restart_combo_timer()
   self.radius_tween = self.radius_visual
   self.timer:tween(self.time_to_combo, self, {radius_tween = 0},"linear", 
                   function() 
-                    self.multi = self.multi-1
                     if self.multi > 1 then
+                      self.multi = self.multi-1
                       self:restart_combo_timer()
                     end
                    end, "combo")
