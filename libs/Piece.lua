@@ -31,7 +31,6 @@ function Piece:new(interface,x,y,opts)
       piece_x = piece_x + 1
     end
 	end)
-
 	self.input:bind("a", function()
 		if self:can_piece_move_left() then
 			piece_x = piece_x -1

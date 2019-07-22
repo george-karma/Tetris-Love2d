@@ -17,7 +17,8 @@ function Grid:new(interface,x,y,opts)
   --self.interface:addGameObject("ExplosionFX",100,100,{size = 50})
 	inert_grid={} -- the matrix that stores pieces not moving, an array of arrays
   define_inert(x_size,y_size)
-  
+  --[[
+    TEST BLOCKS
   inert_grid[1][22] = "i"
   inert_grid[2][22] = "i"
   inert_grid[3][22] = "i"
@@ -39,6 +40,7 @@ function Grid:new(interface,x,y,opts)
   inert_grid[8][21] = "i"
   inert_grid[9][21] = "i"
   inert_grid[10][21] = "i"
+  --]]
 
 end
 
