@@ -17,7 +17,7 @@ function Score:new(interface,x,y,opts)
   self.multi = 1 --the multiplier applied to the score
   self.combo = 0
   self.max_multi = 6
-  self.time_to_combo = 4 --the time before the multiplier runs out
+  self.time_to_combo = 5 --the time before the multiplier runs out
   font = love.graphics.newFont("arial.ttf")
   font:setFilter("nearest", "nearest")
 end

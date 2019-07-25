@@ -14,6 +14,7 @@ function Piece:new(interface,x,y,opts)
   self.creationTime = love.timer.getTime()
 	piece_size = 4 --how big a piece is on the x/y axis/ how manny elements there are in each sub-subarray
   self.input = Input()
+  self.gravity_speed = 1
   self.input:bind("c", function()
     while self:can_piece_move_down() do 
       self:move_vertical(1)
@@ -42,7 +43,7 @@ end
 function Piece:update(dt)
 	timer = timer + dt
 	if self.shape then
-		self:move_piece_down(0.5) --how fast should the piece move in seconds
+		self:move_piece_down(self.gravity_speed) --how fast should the piece move down in seconds
 	end
 	--only update the object if needed
 	if self.timer then self.timer:update(dt) end
