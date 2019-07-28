@@ -9,7 +9,7 @@ function NextPiece:new(interface,x,y,opts)
   self.dead = fase
   self.x,self.y = x,y
   self.orientation = opts.orientation or 0
-  self.pieces = {"Tall","L","S","Square","Tank","Z"}
+  self.pieces = {"Tall","L","S","Square","Tank","Z","ReverseL"}
   self.piece_array = self:fill_table(3) --we fill a table with 2 pieces, can add more for future expansion
   self.sx = opts.sx or 1
   self.sy = opts.sy or 1 
