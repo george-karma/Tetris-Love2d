@@ -63,7 +63,7 @@ function NextPiece:draw_display_piece()
 end
 
 function NextPiece:draw_block_shortcut(block,x,y,mode)
-  self:draw_block(block,x,y,mode, 22, self.x-10,self.y,10)
+  self:draw_block(block,x,y,mode, 22, self.x-10,self.y+12,10)
 end
 
 return NextPiece
