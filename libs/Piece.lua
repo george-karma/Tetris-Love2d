@@ -6,7 +6,13 @@ function Piece:new(interface,x,y,opts)
   self.interface = interface 
   self.order = 3
   piece_x, piece_y = x, y
-  grid_obj = self.interface.screen.grid
+  self.is_piece = opts.is_piece
+  if self.is_piece == nil then
+    self.is_piece = true
+  end
+  if self.is_piece then 
+    grid_obj = self.interface.screen.grid
+  end
   self.timer = Timer()
   self.type = "Piece"
 	self.id = createRandomId()
@@ -15,34 +21,36 @@ function Piece:new(interface,x,y,opts)
 	piece_size = 4 --how big a piece is on the x/y axis/ how manny elements there are in each sub-subarray
   self.input = Input()
   self.gravity_speed = 1
-  self.input:bind("c", function()
-    while self:can_piece_move_down() do 
-      self:move_vertical(1)
-    end
-  end)
-  self.input:bind("x", function() 
-    if can_rotate_piece(self.shape) then 
-      self.shape= rotate_piece(self.shape)
-    end
-   end)
 
-   
-	self.input:bind("d", function()
-	  if self:can_piece_move_right() then
-      piece_x = piece_x + 1
-    end
-	end)
-	self.input:bind("a", function()
-		if self:can_piece_move_left() then
-			piece_x = piece_x -1
-		end
-	end)
-  
+  if self.is_piece then
+    self.input:bind("c", function()
+      while self:can_piece_move_down() do 
+        self:move_vertical(1)
+      end
+    end)
+    self.input:bind("x", function() 
+      if can_rotate_piece(self.shape) then 
+        self.shape= rotate_piece(self.shape)
+      end
+      end)
+
+      
+    self.input:bind("d", function()
+      if self:can_piece_move_right() then
+        piece_x = piece_x + 1
+      end
+    end)
+    self.input:bind("a", function()
+      if self:can_piece_move_left() then
+        piece_x = piece_x -1
+      end
+    end)
+  end
 end
 
 function Piece:update(dt)
 	timer = timer + dt
-	if self.shape then
+	if self.shape and self.is_piece then --the nextPiece object iherts from this object, but because it dosnt have a shape we dont need it to move
 		self:move_piece_down(self.gravity_speed) --how fast should the piece move down in seconds
 	end
 	--only update the object if needed
@@ -194,8 +202,8 @@ function Piece:draw_moving_piece(shape)--drawing the moving piece
     end
   end
 end
-function draw_block_shortcut(block,x,y,mode)
-  draw_block(block,x,y,mode, grid_obj:get_block_distance(), grid_obj:get_x_start(),grid_obj:get_y_start(),grid_obj:get_block_size())
+function Piece:draw_block_shortcut(block,x,y,mode)
+  self:draw_block(block,x,y,mode, grid_obj:get_block_distance(), grid_obj:get_x_start(),grid_obj:get_y_start(),grid_obj:get_block_size())
 end
 --all the functions the piece needs to do upon dying
 function Piece:clean()

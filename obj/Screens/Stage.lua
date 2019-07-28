@@ -9,10 +9,9 @@ function Stage:new(opts)
 	grid_y_start = 1--decides where the grid starts on the y axis
 	self.grid = self.interface:addGameObject("Grid",grid_x_start,grid_y_start)
 	self.score = self.interface:addGameObject("Score", 453,200)
-	self.next_piece_display = self.interface:addGameObject("NextPiece", 440, 310)
-	pieces_array = {"Tall","L","S","Square","Tank","Z"}
-	--pieces_array = {"Tall"}
+	self.next_piece_display = self.interface:addGameObject("NextPiece", 440, 310, {is_piece = false})
 	self.current_piece = self:next_piece()
+	
 	input:bind("r", function()
 		self:reset()
 	end)
@@ -25,7 +24,7 @@ function Stage:new(opts)
 				self.current_piece = null 
 				debug = true
 			else 
-				self:next_piece()
+				self.current_piece = self:next_piece()
 			end
 		end
 	)
@@ -43,10 +42,10 @@ end
 function Stage:draw()
 	self.interface:draw()
 end
-function Stage:next_piece()
-	local rand_number = love.math.random(6)
-	print(pieces_array[rand_number])
-	local current_piece = self.interface:addGameObject(pieces_array[rand_number],4,0)
+function Stage:next_piece() --not used anymore 
+	local piece = self.next_piece_display:return_piece()
+	print("Next piece is " .. piece)
+	local current_piece = self.interface:addGameObject(piece,4,0)
 	return current_piece
 end
 function Stage:reset()

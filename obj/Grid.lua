@@ -182,7 +182,7 @@ end
 function Grid:get_block_distance()
   return block_distance
 end
-function Grid:get_X_start()
+function Grid:get_x_start()
   return x_location
 end
 function Grid:get_y_start()
