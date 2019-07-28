@@ -8,6 +8,7 @@ local Interface = Class:extend()
 function Interface:new(screen) --an interface is needed for every screen in the game, the interface is trashed after its no longer needed(e.g. moving to a diffrent screen)
 	self.screen = screen
 	self.gameObjectArray = {}
+	self.type = "Interface"
 
 end
 

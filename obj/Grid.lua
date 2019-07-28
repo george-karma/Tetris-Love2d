@@ -67,7 +67,7 @@ function draw_grid()
   --for every x and y position do the following
   for x = 1 , x_size do
     for y = 1, y_size do
-      if y <= 4 then
+      if y <= y_size_playable_start then
         love.graphics.setColor(255, 255,255)
         draw_block_shortcut("e",x,y,"line")
       else
@@ -95,12 +95,15 @@ function Grid:check_for_completed_rows()
         row_completed = false -- if a block on the x axis is empty, then  we return false and not remove the row
       end
     end
-    if row_completed and y ~= y_size_playable_start then  --if the row is compolete and it is not the top most row
+    if row_completed then  --if the row is compolete and it is not the top most row
       rows_cleared = rows_cleared + 1
       self:clear_animaiton(y)
-      for y_move = y, (y_size_playable_start - 1), -1 do  --from current y to secont top most row of plyabl earea (y to 4)
-        for x = 1, x_size do
-          inert_grid[x][y_move] = inert_grid[x][y_move-1]
+      print ("the row to be cleared is " .. y)
+      if y ~= y_size_playable_start then 
+        for y_move = y, (y_size_playable_start - 1), -1 do  --from current y to secont top most row of plyabl earea (y to 4)
+          for x = 1, x_size do
+            inert_grid[x][y_move] = inert_grid[x][y_move-1]
+          end
         end
       end
     end

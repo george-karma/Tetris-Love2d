@@ -3,6 +3,7 @@ local Score = Class:extend()
 function Score:new(interface,x,y,opts)
   
   self.interface = interface
+  self.type = "Score"
   self.timer = Timer()
   self.dead = fase
   self.x,self.y = x,y
@@ -17,9 +18,9 @@ function Score:new(interface,x,y,opts)
   self.multi = 1 --the multiplier applied to the score
   self.combo = 0
   self.max_multi = 6
+  self.shift_x = 8
   self.time_to_combo = 5 --the time before the multiplier runs out
-  font = love.graphics.newFont("arial.ttf")
-  font:setFilter("nearest", "nearest")
+
 end
 
 function Score:update(dt)
@@ -28,9 +29,9 @@ end
 
 function Score:draw()
   love.graphics.setFont(font)
-  love.graphics.circle("fill", self.x + self.radius_visual/1.5, self.y + self.radius_visual*2, self.radius_tween, 10)
-  love.graphics.circle("line", self.x + self.radius_visual/1.5, self.y + self.radius_visual*2, self.radius_visual, 10)
-  love.graphics.print("Score " .. self.score, self.x, self.y, self.orientation,  self.sx,  self.sy, self.ox, self.oy )
+  love.graphics.circle("fill", self.x + self.radius_visual/1.5 + self.shift_x, self.y + self.radius_visual*2, self.radius_tween, 10)
+  love.graphics.circle("line", self.x + self.radius_visual/1.5 + self.shift_x, self.y + self.radius_visual*2, self.radius_visual, 10)
+  love.graphics.print("Score: " .. self.score, self.x, self.y, self.orientation,  self.sx,  self.sy, self.ox, self.oy )
   love.graphics.setColor(colours_array["b"])
   love.graphics.print("x" .. self.multi, self.x + self.radius_visual/1.5, self.y + self.radius_visual*2, self.orientation,  self.sx,  self.sy, self.ox, self.oy )
 

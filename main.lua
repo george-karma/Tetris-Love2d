@@ -11,6 +11,9 @@ function  love.load()
   love.window.setMode(540, 966)
   compile_objects("obj") --automatically require all the objects and require them under the file name (they will be called with the same way as the file name), obj should be in obj folder
   input = Input() -- initialising the input library used
+  
+  font = love.graphics.newFont("arial.ttf",18)
+  font:setFilter("nearest", "nearest")
 
   timer = 0
   current_screen = nil

@@ -8,7 +8,8 @@ function Stage:new(opts)
 	grid_x_start = 1--decides where the grid stats on the x axis
 	grid_y_start = 1--decides where the grid starts on the y axis
 	self.grid = self.interface:addGameObject("Grid",grid_x_start,grid_y_start)
-	self.score = self.interface:addGameObject("Score", 450,200, {sx = 1.5, sy = 1.5})
+	self.score = self.interface:addGameObject("Score", 453,200)
+	self.next_piece_display = self.interface:addGameObject("NextPiece", 440, 310)
 	pieces_array = {"Tall","L","S","Square","Tank","Z"}
 	--pieces_array = {"Tall"}
 	self.current_piece = self:next_piece()
@@ -16,6 +17,19 @@ function Stage:new(opts)
 		self:reset()
 	end)
 	input:bind("g", function() self.interface:display_update_que() end)
+	debug = false
+	input:bind("i", 
+		function() 
+			if not debug then 
+				self.current_piece:reset()
+				self.current_piece = null 
+				debug = true
+			else 
+				self:next_piece()
+			end
+		end
+	)
+	input:bind("o", function() self.grid:check_for_completed_rows() end)
 	
 	
 	
